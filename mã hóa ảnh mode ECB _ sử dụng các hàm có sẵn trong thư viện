@@ -1,0 +1,20 @@
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+# đọc ảnh BMP
+with open("input.bmp", "rb") as f:
+    header=f.read(54) #Header BMP
+    data=f.read()
+# Padding cho đủ block 16 bytes
+def pad(data):
+    return data + b"\x00" * (16- len(data) % 16)
+data_padded=pad(data)
+# sinh khoá AES
+key= get_random_bytes(16)
+cipher=AES.new(key, AES.MODE_ECB)
+# mã hoá
+encrypted_data= cipher.encrypt(data_padded)
+# ghi ảnh đã mã hoá
+with open("output_ecb.bmp", "wb") as f:
+    f.write(header)
+    f.write(encrypted_data)
+print("Mã hoá ECB xong - kiểm tra output_ecb.bmp")
