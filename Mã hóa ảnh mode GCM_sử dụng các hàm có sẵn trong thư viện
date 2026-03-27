@@ -1,0 +1,25 @@
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+
+# Đọc ảnh
+with open("input.bmp", "rb") as f:
+    data = f.read()
+
+# Sinh key
+key = get_random_bytes(16)
+
+# Lưu key (PHỤC VỤ DEMO)
+with open("key.bin", "wb") as f:
+    f.write(key)
+
+# AES GCM
+cipher = AES.new(key, AES.MODE_GCM)
+ciphertext, tag = cipher.encrypt_and_digest(data)
+
+# Lưu dữ liệu mã hóa
+with open("output_gcm.bin", "wb") as f:
+    f.write(cipher.nonce)
+    f.write(tag)
+    f.write(ciphertext)
+
+print("Mã hoá GCM xong - kiểm tra output_gcm.bmp")
